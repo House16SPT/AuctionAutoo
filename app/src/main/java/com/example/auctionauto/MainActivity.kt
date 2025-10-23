@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -21,8 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.ui.theme.AuctionAutoTheme
+import com.example.auctionauto.R
 
 
 
@@ -43,6 +47,16 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
                         contentAlignment = Alignment.Center
                     ){
+                        Image(
+                            painter = painterResource(id=R.drawable.auctionauto),
+                            contentDescription = "AuctionAuto Logo",
+                            modifier = Modifier
+                                .offset(y=-175.dp)
+                                .padding(innerPadding)
+                                .width(400.dp)
+                                .height(90.dp),
+                            contentScale = ContentScale.FillBounds
+                        )
                         Text("Welcome to Auction Auto", modifier = Modifier.align(Alignment.Center)
                             .padding(innerPadding)
                             .offset(y= -100.dp),
@@ -71,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             .height(50.dp)
                             .offset(y=160.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF87A96B)
+                                containerColor = Color(0xFFB53A1D)
                             )
 
                         )
@@ -86,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             .height(50.dp)
                             .offset(y=225.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF87A96B)
+                                containerColor = Color(0xFFB53A1D)
                             )
                         )
                         {
