@@ -30,8 +30,8 @@ class Login : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var Email = ""
-        var Password = ""
+        var Email = "" // variable for email text field
+        var Password = "" // variable for password text field
 
         enableEdgeToEdge()
         setContent {
@@ -39,7 +39,7 @@ class Login : ComponentActivity() {
                 }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
+                    Box(  //creates a box that fills max screen size and fills device with following entities
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
@@ -48,8 +48,8 @@ class Login : ComponentActivity() {
                         Image(
                             painter = painterResource(id=R.drawable.auctionauto),
                             contentDescription = "AuctionAuto Logo",
-                            modifier = Modifier
-                                .offset(y=-175.dp)
+                            modifier = Modifier  //Modifier.offset().padding()... can stack multiple modifiers
+                                .offset(y=-175.dp)  // xx.dp is size, or distance.
                                 .padding(innerPadding)
                                 .width(400.dp)
                                 .height(90.dp),
@@ -83,12 +83,12 @@ class Login : ComponentActivity() {
                             .height(50.dp)
                             .offset(y=160.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFB53A1D)
-                            )
+                                containerColor = Color(0xFFB53A1D) // These colors are grabbed from an HTML
+                            )                                      // color picker. Grab the Hex code and put 0xFF... to complete
 
                         )
                         {
-                            Text("Login")
+                            Text("Login") //text on button above
 
                         }
                         Button(onClick = {register()},
@@ -102,7 +102,7 @@ class Login : ComponentActivity() {
                             )
                         )
                         {
-                            Text("Register")
+                            Text("Register") //Text on button above
 
                         }
                     }
