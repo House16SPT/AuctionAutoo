@@ -30,6 +30,7 @@ import com.example.auctionauto.R
 
 
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AuctionAutoTheme {
+                }
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(
                         modifier = Modifier
@@ -93,7 +96,7 @@ class MainActivity : ComponentActivity() {
                             Text("Login")
 
                         }
-                        Button(onClick = {},
+                        Button(onClick = {register()},
                             modifier = Modifier
                             .padding(innerPadding)
                             .width(300.dp)
@@ -112,5 +115,76 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+    fun register()
+    {
+        var email = "";
+        var password = "";
+        enableEdgeToEdge()
+        setContent {
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id=R.drawable.auctionauto),
+                        contentDescription = "AuctionAuto Logo",
+                        modifier = Modifier
+                            .offset(y=-175.dp)
+                            .padding(innerPadding)
+                            .width(400.dp)
+                            .height(90.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
+                    Text("Welcome to Auction Auto", modifier = Modifier.align(Alignment.Center)
+                        .padding(innerPadding)
+                        .offset(y= -100.dp),
+                        fontSize = 20.sp
+                    )
+                    Text("Please enter your information for registration", modifier = Modifier
+                        .padding(innerPadding)
+                        .offset(y=-75.dp),
+                        fontSize = 20.sp
+                    )
+                    TextField(
+                        value = email,
+                        onValueChange = {email = it},
+                        label = { Text("Email") }
+                    )
+                    TextField(
+                        value = password,
+                        onValueChange = {password = it},
+                        label = { Text("Password") },
+                        modifier = Modifier.padding(innerPadding)
+                            .offset(y=75.dp)
+                    )
+                    TextField(
+                        value = password,
+                        onValueChange = {password = it},
+                        label = { Text("Re-type Password") },
+                        modifier = Modifier.padding(innerPadding)
+                            .offset(y=150.dp)
+                    )
+                    Button(onClick = {register()},
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .width(300.dp)
+                            .height(50.dp)
+                            .offset(y=225.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFB53A1D)
+                        )
+                    )
+                    {
+                        Text("Create Account")
+
+                    }
+                }
+            }
+        }
     }
 }
+
