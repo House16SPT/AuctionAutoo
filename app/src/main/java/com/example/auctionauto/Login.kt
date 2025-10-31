@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.ui.theme.AuctionAutoTheme
+import com.example.auctionauto.Dashboard
 
 
 class Login : ComponentActivity() {
@@ -32,6 +33,7 @@ class Login : ComponentActivity() {
 
         var Email = "" // variable for email text field
         var Password = "" // variable for password text field
+        var Dashboard = Dashboard();
 
         enableEdgeToEdge()
         setContent {
@@ -77,7 +79,7 @@ class Login : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                                 .offset(y=75.dp)
                         )
-                        Button(onClick = {}, modifier = Modifier
+                        Button(onClick = { Dashboard.dashboard()}, modifier = Modifier
                             .padding(innerPadding)
                             .width(300.dp)
                             .height(50.dp)
