@@ -117,8 +117,8 @@ class Login : ComponentActivity() {
 
     fun register()
     {
-        var email = "";
-        var password = "";
+        var email = ""
+        var password = ""
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
