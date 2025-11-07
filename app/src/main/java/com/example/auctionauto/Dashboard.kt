@@ -39,7 +39,7 @@ class Dashboard : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var expanded by remember { mutableStateOf(false) }
+            //var expanded by remember { mutableStateOf(false) }
             val choices = listOf("Make a listing","View your Listings","View Bids")
             AuctionAutoTheme {
                 Scaffold(
@@ -70,12 +70,14 @@ class Dashboard : ComponentActivity() {
                                         modifier = Modifier.fillMaxSize(),
                                         contentScale = ContentScale.FillBounds
                                     )
-+
                                 }
+                                /*
                                     DropdownMenu(
                                         expanded = expanded,
                                         onDismissRequest = {expanded = false}
                                     ) { }
+
+                                 */
                             }
                             ,
                             modifier = Modifier
