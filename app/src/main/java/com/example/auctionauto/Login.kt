@@ -1,6 +1,5 @@
 package com.example.auctionauto
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -78,10 +77,7 @@ class Login : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                                 .offset(y=75.dp)
                         )
-                        Button(onClick = {
-                            val intent = Intent(this@Login, Dashboard::class.java)
-                            startActivity(intent)
-                        }, modifier = Modifier
+                        Button(onClick = {}, modifier = Modifier
                             .padding(innerPadding)
                             .width(300.dp)
                             .height(50.dp)
@@ -117,8 +113,8 @@ class Login : ComponentActivity() {
 
     fun register()
     {
-        var email = ""
-        var password = ""
+        var email = "";
+        var password = "";
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
