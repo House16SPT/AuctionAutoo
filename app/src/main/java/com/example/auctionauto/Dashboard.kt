@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -25,6 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 
 
 class Dashboard : ComponentActivity() {
@@ -32,65 +41,77 @@ class Dashboard : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            //var expanded by remember { mutableStateOf(false) }
-            val choices = listOf("Make a listing","View your Listings","View Bids")
+
+            val choices = listOf("Make a listing", "View your listings", "View Bids")
+            var expanded by remember { mutableStateOf(false) }
+
             AuctionAutoTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = {Image(
-                                painter = painterResource(id=R.drawable.auctionauto),
-                                modifier = Modifier
-                                    .height(65.dp)
-                                    .width(275.dp),
-                                contentDescription = "AuctionAuto Logo",
-                                contentScale = ContentScale.FillBounds
-                                )
-                                Button(onClick = {},
-                                    modifier = Modifier
-                                        .width(80.dp)
-                                        .height(70.dp)
-                                        .offset(x=300.dp)
-                                        .offset(y=0.dp),
-                                        shape = RoundedCornerShape(0.dp),
-                                        contentPadding = PaddingValues(0.dp)
-
-                                )
-                                {
+                            title = {
+                                Box {
                                     Image(
-                                        painter = painterResource(id=R.drawable.auctionautosquarebutton),
-                                        contentDescription = "Square Button",
-                                        modifier = Modifier.fillMaxSize(),
+                                        painter = painterResource(id = R.drawable.auctionauto),
+                                        contentDescription = "AuctionAuto Logo",
+                                        modifier = Modifier
+                                            .height(65.dp)
+                                            .width(275.dp),
                                         contentScale = ContentScale.FillBounds
                                     )
-                                }
-                                /*
+
+                                    Button(
+                                        onClick = { expanded = true },
+                                        modifier = Modifier
+                                            .width(80.dp)
+                                            .height(70.dp)
+                                            .offset(x=300.dp)
+                                            .offset(y=0.dp),
+                                        shape = RoundedCornerShape(0.dp),
+                                        contentPadding = PaddingValues(0.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.auctionautosquarebutton),
+                                            contentDescription = "Menu Button",
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentScale = ContentScale.FillBounds
+                                        )
+                                    }
+
                                     DropdownMenu(
                                         expanded = expanded,
-                                        onDismissRequest = {expanded = false}
-                                    ) { }
-
-                                 */
-                            }
-                            ,
-                            modifier = Modifier
-                                .height(100.dp)
-                            ,
+                                        onDismissRequest = { expanded = false },
+                                        modifier = Modifier.align(Alignment.TopEnd)
+                                    ) {
+                                        choices.forEach { choice ->
+                                            DropdownMenuItem(
+                                                text = { Text(choice) },
+                                                onClick = {
+                                                    expanded = false
+                                                    println("Selected: $choice")
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color(0xFFB53A1D),
                                 titleContentColor = Color.White
                             )
                         )
+                    },
+                    content = { innerPadding ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Welcome to the Dashboard!", fontSize = 24.sp)
+                        }
                     }
-
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Welcome to the Dashboard!", fontSize = 24.sp)
-                    }
-                }
+                )
             }
         }
     }
