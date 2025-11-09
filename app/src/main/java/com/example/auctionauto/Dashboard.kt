@@ -42,7 +42,7 @@ class Dashboard : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val choices = listOf("Make a listing", "View your listings", "View Bids")
+            val choices = listOf("Make a listing", "My listings", "My bids", "Account info")
             var expanded by remember { mutableStateOf(false) }
 
             AuctionAutoTheme {
