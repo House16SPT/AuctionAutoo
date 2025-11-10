@@ -34,18 +34,25 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 
 
 class Dashboard : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            AuctionAutoTheme {
+                DashboardScreen()
+            }
+        }
+    }
 
+        @OptIn(ExperimentalMaterial3Api::class)
+        @Composable
+        fun DashboardScreen(){
             val choices = listOf("Make a listing", "My listings", "My bids", "Account info")
             var expanded by remember { mutableStateOf(false) }
 
-            AuctionAutoTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -59,20 +66,21 @@ class Dashboard : ComponentActivity() {
                                             .width(275.dp),
                                         contentScale = ContentScale.FillBounds
                                     )
-
+                                    Box(
+                                        modifier = Modifier
+                                            .offset(x = 300.dp, y = 0.dp)
+                                    ) {
                                     Button(
-                                        onClick = { expanded = true },
+                                        onClick = {},
                                         modifier = Modifier
                                             .width(80.dp)
-                                            .height(70.dp)
-                                            .offset(x=300.dp)
-                                            .offset(y=0.dp),
+                                            .height(70.dp),
                                         shape = RoundedCornerShape(0.dp),
                                         contentPadding = PaddingValues(0.dp)
                                     ) {
                                         Image(
                                             painter = painterResource(id = R.drawable.auctionautosquarebutton),
-                                            contentDescription = "Menu Button",
+                                            contentDescription = "Square Button",
                                             modifier = Modifier.fillMaxSize(),
                                             contentScale = ContentScale.FillBounds
                                         )
@@ -80,8 +88,7 @@ class Dashboard : ComponentActivity() {
 
                                     DropdownMenu(
                                         expanded = expanded,
-                                        onDismissRequest = { expanded = false },
-                                        modifier = Modifier.align(Alignment.TopEnd)
+                                        onDismissRequest = { expanded = false }
                                     ) {
                                         choices.forEach { choice ->
                                             DropdownMenuItem(
@@ -93,6 +100,7 @@ class Dashboard : ComponentActivity() {
                                             )
                                         }
                                     }
+                                }
                                 }
                             },
                             colors = TopAppBarDefaults.topAppBarColors(
@@ -113,6 +121,10 @@ class Dashboard : ComponentActivity() {
                     }
                 )
             }
-        }
     }
-}
+
+
+
+
+
+
