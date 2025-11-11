@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.ui.theme.AuctionAutoTheme
@@ -56,8 +57,9 @@ fun LoginScreen() {
             LoginContent(
                 modifier = Modifier.padding(innerPadding),
                 onRegisterClick = { showRegisterScreen = true },
-                onLoginClick = {
-                    // Placeholder for login navigation
+                onLoginClick = { context ->
+                    val intent = Intent(context, Dashboard::class.java)
+                    context.startActivity(intent)
                 }
             )
         }
@@ -65,7 +67,8 @@ fun LoginScreen() {
 }
 
 @Composable
-fun LoginContent(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLoginClick: () -> Unit) {
+fun LoginContent(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLoginClick: (android.content.Context) -> Unit) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -105,7 +108,7 @@ fun LoginContent(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onL
             modifier = Modifier.offset(y = 75.dp)
         )
         Button(
-            onClick = onLoginClick,
+            onClick = { onLoginClick(context) },
             modifier = Modifier
                 .width(300.dp)
                 .height(50.dp)

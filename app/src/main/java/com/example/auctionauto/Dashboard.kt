@@ -47,61 +47,62 @@ class Dashboard : ComponentActivity() {
         }
     }
 
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun DashboardScreen(){
-            val choices = listOf("Make a listing", "My listings", "My bids", "Account info")
-            var expanded by remember { mutableStateOf(false) }
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DashboardScreen(){
 
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Box {
+        val choices = listOf("Make a listing", "My listings", "My bids", "Account info")
+        var expanded by remember { mutableStateOf(false) }
+        var selectedPage by remember { mutableStateOf("Dashboard") }
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Box {
+                            Image(
+                                painter = painterResource(id = R.drawable.auctionauto),
+                                contentDescription = "AuctionAuto Logo",
+                                modifier = Modifier
+                                    .height(65.dp)
+                                    .width(275.dp),
+                                contentScale = ContentScale.FillBounds
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .offset(x = 300.dp, y = 0.dp)
+                            ) {
+                                Button(
+                                    onClick = { expanded = !expanded },
+                                    modifier = Modifier
+                                        .width(80.dp)
+                                        .height(70.dp),
+                                    shape = RoundedCornerShape(0.dp),
+                                    contentPadding = PaddingValues(0.dp)
+                                ){
                                     Image(
-                                        painter = painterResource(id = R.drawable.auctionauto),
-                                        contentDescription = "AuctionAuto Logo",
-                                        modifier = Modifier
-                                            .height(65.dp)
-                                            .width(275.dp),
+                                        painter = painterResource(id = R.drawable.auctionautosquarebutton),
+                                        contentDescription = "Square Button",
+                                        modifier = Modifier.fillMaxSize(),
                                         contentScale = ContentScale.FillBounds
                                     )
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(x = 300.dp, y = 0.dp)
-                                    ) {
-                                    Button(
-                                        onClick = {},
-                                        modifier = Modifier
-                                            .width(80.dp)
-                                            .height(70.dp),
-                                        shape = RoundedCornerShape(0.dp),
-                                        contentPadding = PaddingValues(0.dp)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.auctionautosquarebutton),
-                                            contentDescription = "Square Button",
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentScale = ContentScale.FillBounds
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    choices.forEach { choice ->
+                                        DropdownMenuItem(
+                                            text = { Text(choice) },
+                                            onClick = {
+                                                expanded = false
+                                                println("Selected: $choice")
+                                            }
                                         )
                                     }
-
-                                    DropdownMenu(
-                                        expanded = expanded,
-                                        onDismissRequest = { expanded = false }
-                                    ) {
-                                        choices.forEach { choice ->
-                                            DropdownMenuItem(
-                                                text = { Text(choice) },
-                                                onClick = {
-                                                    expanded = false
-                                                    println("Selected: $choice")
-                                                }
-                                            )
-                                        }
-                                    }
                                 }
-                                }
+                            }
+                        }
                             },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color(0xFFB53A1D),
@@ -116,12 +117,38 @@ class Dashboard : ComponentActivity() {
                                 .padding(innerPadding),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Welcome to the Dashboard!", fontSize = 24.sp)
+                            when(selectedPage){
+                                "Make a listing" -> MakeListings()
+                                "My listings" -> MyListings()
+                                "My bids" -> MyBids()
+                                "Account Info" -> AccountInfo()
+                                else -> Text("Welcome to the Dashboard!", fontSize = 24.sp)
+                            }
                         }
                     }
                 )
             }
+
+    @Composable
+    fun MakeListings(){
+        Text("Make listings page", fontSize = 24.sp)
     }
+
+    @Composable
+    fun MyListings(){
+        Text("My listings page", fontSize = 24.sp)
+    }
+
+    @Composable
+    fun MyBids(){
+        Text("My bids page", fontSize = 24.sp)
+    }
+
+    @Composable
+    fun AccountInfo(){
+        Text("Account info page", fontSize = 24.sp)
+    }
+}
 
 
 
