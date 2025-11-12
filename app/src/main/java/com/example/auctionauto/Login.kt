@@ -15,13 +15,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.ui.theme.AuctionAutoTheme
@@ -30,160 +37,170 @@ import com.example.auctionauto.ui.theme.AuctionAutoTheme
 class Login : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        var Email = ""
-        var Password = ""
-
         enableEdgeToEdge()
         setContent {
             AuctionAutoTheme {
-                }
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        contentAlignment = Alignment.Center
-                    ){
-                        Image(
-                            painter = painterResource(id=R.drawable.auctionauto),
-                            contentDescription = "AuctionAuto Logo",
-                            modifier = Modifier
-                                .offset(y=-175.dp)
-                                .padding(innerPadding)
-                                .width(400.dp)
-                                .height(90.dp),
-                            contentScale = ContentScale.FillBounds
-                        )
-                        Text("Welcome to Auction Auto", modifier = Modifier.align(Alignment.Center)
-                            .padding(innerPadding)
-                            .offset(y= -100.dp),
-                            fontSize = 20.sp
-                        )
-                        Text("Please Login", modifier = Modifier
-                            .padding(innerPadding)
-                            .offset(y=-75.dp),
-                            fontSize = 20.sp
-                        )
-                        TextField(
-                            value = Email,
-                            onValueChange = {Email = it},
-                            label = { Text("Email") }
-                        )
-                        TextField(
-                            value = Password,
-                            onValueChange = {Password = it},
-                            label = { Text("Password") },
-                            modifier = Modifier.padding(innerPadding)
-                                .offset(y=75.dp)
-                        )
-                        Button(onClick = {
-                            val intent = Intent(this@Login, Dashboard::class.java)
-                            startActivity(intent)
-                        }, modifier = Modifier
-                            .padding(innerPadding)
-                            .width(300.dp)
-                            .height(50.dp)
-                            .offset(y=160.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFB53A1D)
-                            )
-
-                        )
-                        {
-                            Text("Login")
-
-                        }
-                        Button(onClick = {register()},
-                            modifier = Modifier
-                            .padding(innerPadding)
-                            .width(300.dp)
-                            .height(50.dp)
-                            .offset(y=225.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFB53A1D)
-                            )
-                        )
-                        {
-                            Text("Register")
-
-                        }
-                    }
-
-                }
-            }
-        }
-
-    fun register()
-    {
-        var email = ""
-        var password = ""
-        enableEdgeToEdge()
-        setContent {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id=R.drawable.auctionauto),
-                        contentDescription = "AuctionAuto Logo",
-                        modifier = Modifier
-                            .offset(y=-175.dp)
-                            .padding(innerPadding)
-                            .width(400.dp)
-                            .height(90.dp),
-                        contentScale = ContentScale.FillBounds
-                    )
-                    Text("Welcome to Auction Auto", modifier = Modifier.align(Alignment.Center)
-                        .padding(innerPadding)
-                        .offset(y= -100.dp),
-                        fontSize = 20.sp
-                    )
-                    Text("Please enter your information for registration", modifier = Modifier
-                        .padding(innerPadding)
-                        .offset(y=-75.dp),
-                        fontSize = 20.sp
-                    )
-                    TextField(
-                        value = email,
-                        onValueChange = {email = it},
-                        label = { Text("Email") }
-                    )
-                    TextField(
-                        value = password,
-                        onValueChange = {password = it},
-                        label = { Text("Password") },
-                        modifier = Modifier.padding(innerPadding)
-                            .offset(y=75.dp)
-                    )
-                    TextField(
-                        value = password,
-                        onValueChange = {password = it},
-                        label = { Text("Re-type Password") },
-                        modifier = Modifier.padding(innerPadding)
-                            .offset(y=150.dp)
-                    )
-                    Button(onClick = {register()},
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .width(300.dp)
-                            .height(50.dp)
-                            .offset(y=225.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB53A1D)
-                        )
-                    )
-                    {
-                        Text("Create Account")
-
-                    }
-                }
+                LoginScreen()
             }
         }
     }
 }
 
+@Composable
+fun LoginScreen() {
+    var showRegisterScreen by remember { mutableStateOf(false) }
+
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        if (showRegisterScreen) {
+            RegisterScreen(onBack = { showRegisterScreen = false })
+        } else {
+            LoginContent(
+                modifier = Modifier.padding(innerPadding),
+                onRegisterClick = { showRegisterScreen = true },
+                onLoginClick = { context ->
+                    val intent = Intent(context, Dashboard::class.java)
+                    context.startActivity(intent)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun LoginContent(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLoginClick: (android.content.Context) -> Unit) {
+    val context = LocalContext.current
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.auctionauto),
+            contentDescription = "AuctionAuto Logo",
+            modifier = Modifier
+                .offset(y = -175.dp)
+                .width(400.dp)
+                .height(90.dp),
+            contentScale = ContentScale.FillBounds
+        )
+        Text(
+            "Welcome to Auction Auto", modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = -100.dp),
+            fontSize = 20.sp
+        )
+        Text(
+            "Please Login", modifier = Modifier
+                .offset(y = -75.dp),
+            fontSize = 20.sp
+        )
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier.offset(y = 75.dp)
+        )
+        Button(
+            onClick = { onLoginClick(context) },
+            modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+                .offset(y = 160.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB53A1D)
+            )
+        ) {
+            Text("Login")
+        }
+        Button(
+            onClick = onRegisterClick,
+            modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+                .offset(y = 225.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB53A1D)
+            )
+        ) {
+            Text("Register")
+        }
+    }
+}
+
+@Composable
+fun RegisterScreen(onBack: () -> Unit) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.auctionauto),
+            contentDescription = "AuctionAuto Logo",
+            modifier = Modifier
+                .offset(y = -175.dp)
+                .width(400.dp)
+                .height(90.dp),
+            contentScale = ContentScale.FillBounds
+        )
+        Text(
+            "Welcome to Auction Auto", modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = -100.dp),
+            fontSize = 20.sp
+        )
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier.offset(y = 75.dp)
+        )
+        TextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Re-type Password") },
+            modifier = Modifier.offset(y = 150.dp)
+        )
+        Button(
+            onClick = { /* TODO: Handle account creation logic */ },
+            modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+                .offset(y = 225.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB53A1D)
+            )
+        ) {
+            Text("Create Account")
+        }
+        Button(
+            onClick = onBack,
+            modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+                .offset(y = 290.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB53A1D)
+            )
+        ) {
+            Text("Back to Login")
+        }
+    }
+}
