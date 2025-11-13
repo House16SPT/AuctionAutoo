@@ -56,7 +56,7 @@ fun ScreenNavigator() {
             )
         }
 
-        composable("MAKE_LISTING_SCREEN") {
+        composable("MAKE_LISTINGS_SCREEN") {
             MakeListingScreen(
                 onBack = {
                     navController.popBackStack()
