@@ -112,6 +112,7 @@ fun DashboardScreen(
                         }
                     }
                 },
+                modifier = Modifier.height(100.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFFB53A1D),
                     titleContentColor = Color.White

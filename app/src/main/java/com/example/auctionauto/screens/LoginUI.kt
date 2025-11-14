@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.R
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLoginClick: () -> Unit) {
@@ -31,64 +35,78 @@ fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLo
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.auctionauto),
-            contentDescription = "AuctionAuto Logo",
-            modifier = Modifier
-                .offset(y = -175.dp)
-                .width(400.dp)
-                .height(90.dp),
-            contentScale = ContentScale.FillBounds
-        )
-        Text(
-            "Welcome to Auction Auto", modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = -100.dp),
-            fontSize = 20.sp
-        )
-        Text(
-            "Please Login", modifier = Modifier
-                .offset(y = -75.dp),
-            fontSize = 20.sp
-        )
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.offset(y = 75.dp)
-        )
-        Button(
-            onClick = { onLoginClick() },
-            modifier = Modifier
-                .width(300.dp)
-                .height(50.dp)
-                .offset(y = 160.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB53A1D)
-            )
+
+    Scaffold(
+    ) { innerPadding ->
+        Box(
+            modifier = modifier.fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            Text("Login")
-        }
-        Button(
-            onClick = onRegisterClick,
-            modifier = Modifier
-                .width(300.dp)
-                .height(50.dp)
-                .offset(y = 225.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB53A1D)
-            )
-        ) {
-            Text("Register")
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(id = R.drawable.auctionauto),
+                    contentDescription = "AuctionAuto Logo",
+                    modifier = Modifier
+                        .offset(y=-100.dp)
+                        .width(400.dp)
+                        .height(90.dp),
+                    contentScale = ContentScale.FillBounds
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    "Welcome to Auction Auto", modifier = Modifier,
+                    fontSize = 20.sp
+                )
+                Spacer(modifier= Modifier.height(16.dp))
+                Text(
+                    "Please Login", modifier = Modifier
+                        .offset(y = -75.dp),
+                    fontSize = 20.sp
+                )
+                Spacer(modifier= Modifier.height(16.dp))
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") }
+                )
+                Spacer(modifier= Modifier.height(16.dp))
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    modifier = Modifier.offset(y = 75.dp)
+                )
+                Spacer(modifier= Modifier.height(2.dp))
+                Button(
+                    onClick = { onLoginClick() },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(50.dp)
+                        .offset(y = 160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB53A1D)
+                    )
+                ) {
+                    Text("Login")
+                }
+                Spacer(modifier= Modifier.height(2.dp))
+                Button(
+                    onClick = onRegisterClick,
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(50.dp)
+                        .offset(y = 225.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB53A1D)
+                    )
+                ) {
+                    Text("Register")
+                }
+            }
         }
     }
 }

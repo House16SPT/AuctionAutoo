@@ -1,5 +1,6 @@
 package com.example.auctionauto.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +36,20 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var model by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     // MakeListing implementation
     Scaffold (
         topBar = {
             TopAppBar(
-                title = {Text("Make Listing")}
+                title = {
+                    Box{
+                    Text("Make Listing")}
+                },
+                modifier = Modifier.height(100.dp),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFFB53A1D),
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { innerPadding ->
@@ -91,9 +102,23 @@ fun MakeListingScreen(onBack: () -> Unit) {
                         label = { Text("Year") },
                     )
                 }
+                Spacer(Modifier.height(60.dp))
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center
+                )
+                {
+                    TextField(
+                        modifier = Modifier.width(300.dp)
+                            .height(200.dp),
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Description") },
+                    )
+                }
             }
             Button(
-                onClick = {},
+                onClick = {sendToDatabase(onBack,year,color,make,model,description)},
                 modifier = Modifier
                     .width(300.dp)
                     .height(50.dp)
@@ -107,3 +132,11 @@ fun MakeListingScreen(onBack: () -> Unit) {
         }
     }
 }
+
+fun sendToDatabase(onBack: () -> Unit,year: String,color: String,
+                   make:String,model:String,description:String)
+    {
+
+    //Do all database addition here.
+    onBack()
+    }
