@@ -56,15 +56,14 @@ fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLo
                     contentScale = ContentScale.FillBounds
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     "Welcome to Auction Auto", modifier = Modifier,
                     fontSize = 20.sp
                 )
                 Spacer(modifier= Modifier.height(16.dp))
                 Text(
-                    "Please Login", modifier = Modifier
-                        .offset(y = -75.dp),
+                    "Please Login", modifier = Modifier,
                     fontSize = 20.sp
                 )
                 Spacer(modifier= Modifier.height(16.dp))
@@ -78,28 +77,25 @@ fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLo
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Password") },
-                    modifier = Modifier.offset(y = 75.dp)
                 )
-                Spacer(modifier= Modifier.height(2.dp))
+                Spacer(modifier= Modifier.height(16.dp))
                 Button(
                     onClick = { onLoginClick() },
                     modifier = Modifier
                         .width(300.dp)
-                        .height(50.dp)
-                        .offset(y = 160.dp),
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFB53A1D)
                     )
                 ) {
                     Text("Login")
                 }
-                Spacer(modifier= Modifier.height(2.dp))
+                Spacer(modifier= Modifier.height(16.dp))
                 Button(
                     onClick = onRegisterClick,
                     modifier = Modifier
                         .width(300.dp)
-                        .height(50.dp)
-                        .offset(y = 225.dp),
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFB53A1D)
                     )
