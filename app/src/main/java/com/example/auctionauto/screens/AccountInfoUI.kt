@@ -80,7 +80,7 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                     horizontalArrangement = Arrangement.Center
                 ){
                         Button(
-                            onClick = {onPaymentInfoClick },
+                            onClick = {onPaymentInfoClick()},
                             modifier = Modifier
                                 .width(300.dp)
                                 .height(100.dp),
