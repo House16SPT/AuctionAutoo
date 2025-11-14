@@ -51,7 +51,7 @@ fun ScreenNavigator() {
                     navController.navigate("ACCOUNT_INFO_SCREEN")
                 },
                 onBack = {
-                    navController.popBackStack()
+                    navController.popBackStack()  // go back to previous screen.
                 }
             )
         }

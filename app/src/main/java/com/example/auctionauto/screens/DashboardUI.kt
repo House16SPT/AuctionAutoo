@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,67 +48,68 @@ fun DashboardScreen(
         topBar = {
             TopAppBar(
                 title = {
+                    Image(
+                        painter = painterResource(id = R.drawable.auctionauto),
+                        contentDescription = "AuctionAuto Logo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                            .height(65.dp)
+                            .width(275.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
+                },
+
+                actions = {
                     Box {
-                        Image(
-                            painter = painterResource(id = R.drawable.auctionauto),
-                            contentDescription = "AuctionAuto Logo",
+                        Button(
+                            onClick = { expanded = !expanded },
                             modifier = Modifier
-                                .height(65.dp)
-                                .width(275.dp),
-                            contentScale = ContentScale.FillBounds
-                        )
-                        Box(
-                            modifier = Modifier
-                                .offset(x = 300.dp, y = 0.dp)
+                                .width(80.dp)
+                                .height(70.dp),
+                            shape = RoundedCornerShape(0.dp),
+                            contentPadding = PaddingValues(0.dp)
                         ) {
-                            Button(
-                                onClick = { expanded = !expanded },
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .height(70.dp),
-                                shape = RoundedCornerShape(0.dp),
-                                contentPadding = PaddingValues(0.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.auctionautosquarebutton),
-                                    contentDescription = "Square Button",
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.FillBounds
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text("Make a listing") },
-                                    onClick = {
-                                        expanded = false
-                                        onMakeListingClick()
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("My listings") },
-                                    onClick = {
-                                        expanded = false
-                                        onMyListingsClick()
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("My bids") },
-                                    onClick = {
-                                        expanded = false
-                                        onMyBidsClick()
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Account info") },
-                                    onClick = {
-                                        expanded = false
-                                        onAccountInfoClick()
-                                    }
-                                )
-                            }
+                            Image(
+                                painter = painterResource(id = R.drawable.auctionautosquarebutton),
+                                contentDescription = "Menu Button",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.FillBounds
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Make a listing") },
+                                onClick = {
+                                    expanded = false
+                                    onMakeListingClick()
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("My listings") },
+                                onClick = {
+                                    expanded = false
+                                    onMyListingsClick()
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("My bids") },
+                                onClick = {
+                                    expanded = false
+                                    onMyBidsClick()
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Account info") },
+                                onClick = {
+                                    expanded = false
+                                    onAccountInfoClick()
+                                }
+                            )
                         }
                     }
                 },
