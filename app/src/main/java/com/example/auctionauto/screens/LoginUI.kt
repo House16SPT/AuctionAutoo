@@ -55,8 +55,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLo
                         .height(90.dp),
                     contentScale = ContentScale.FillBounds
                 )
-
-                //Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     "Welcome to Auction Auto", modifier = Modifier,
                     fontSize = 20.sp
