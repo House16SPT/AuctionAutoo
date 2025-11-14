@@ -80,8 +80,11 @@ fun ScreenNavigator() {
             )
         }
 
-        composable("ACCOUNT_INFO_SCREEN") {
-            AccountInfoScreen(
+        composable("PAYMENT_INFO_SCREEN") {
+            PaymentInfoScreen(
+                onPaymentInfoClick = {
+                    navController.navigate("PAYMENT_INFO_SCREEN")
+                },
                 onBack = {
                     navController.popBackStack()
                 }

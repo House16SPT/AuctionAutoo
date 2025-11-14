@@ -31,7 +31,7 @@ import kotlin.Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
+fun PaymentInfoScreen(onBack: () -> Unit){
 
     // AccountInfo implementation
     Scaffold (
@@ -76,39 +76,21 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                 }
                 Spacer(modifier = Modifier.height(80.dp))
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                        Button(
-                            onClick = {onPaymentInfoClick },
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(100.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFB53A1D)
-                            )
-                        ) {
-                            Text("Payment Methods")
-                        }
-
-                }
-                Spacer(modifier = Modifier.height(80.dp))
-                Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.Center
                 ){
 
-                        Button(
-                            onClick = {onBack()},
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(100.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFB53A1D)
-                            )
-                        ) {
-                            Text("Back to Dashboard")
-                        }
+                    Button(
+                        onClick = {onBack()},
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(100.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFB53A1D)
+                        )
+                    ) {
+                        Text("Back to Account Info")
+                    }
                 }
             }
         }
