@@ -1,5 +1,6 @@
 package com.example.auctionauto.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,25 +12,32 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.R
+import com.example.auctionauto.data.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun RegisterScreen(onBack: () -> Unit) {
+fun RegisterScreen(
+    onBack: () -> Unit,
+    userRepo: UserRepository
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") } // optional: you'll need a name field; if not present, it will be empty
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -52,6 +60,8 @@ fun RegisterScreen(onBack: () -> Unit) {
                 .offset(y = -100.dp),
             fontSize = 20.sp
         )
+
+        // Email/password fields placed as before (kept layout)
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -70,7 +80,32 @@ fun RegisterScreen(onBack: () -> Unit) {
             modifier = Modifier.offset(y = 150.dp)
         )
         Button(
-            onClick = { /* TODO: Handle account creation logic */ },
+            onClick = {
+                // validate & register
+                if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+                    Toast.makeText(context, "All fields required", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+                if (password != confirmPassword) {
+                    Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+                coroutineScope.launch {
+                    val created = withContext(Dispatchers.IO) {
+                        userRepo.registerUser(name.trim(), email.trim(), password)
+                    }
+                    if (created) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
+                            onBack()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Email already registered", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            },
             modifier = Modifier
                 .width(300.dp)
                 .height(50.dp)

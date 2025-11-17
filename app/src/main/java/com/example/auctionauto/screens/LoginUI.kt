@@ -1,22 +1,14 @@
 package com.example.auctionauto.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
@@ -26,18 +18,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.R
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import com.example.auctionauto.data.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLoginClick: () -> Unit) {
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onRegisterClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    userRepo: UserRepository
+) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
-
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         Box(
             modifier = modifier.fillMaxSize()
                 .padding(innerPadding),
@@ -78,7 +77,20 @@ fun LoginScreen(modifier: Modifier = Modifier, onRegisterClick: () -> Unit, onLo
                 )
                 Spacer(modifier= Modifier.height(16.dp))
                 Button(
-                    onClick = { onLoginClick() },
+                    onClick = {
+                        // check login via Room
+                        coroutineScope.launch {
+                            val ok = withContext(Dispatchers.IO) {
+                                userRepo.loginUser(email.trim(), password)
+                            }
+                            if (ok) {
+                                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                                onLoginClick()
+                            } else {
+                                Toast.makeText(context, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .width(300.dp)
                         .height(50.dp),

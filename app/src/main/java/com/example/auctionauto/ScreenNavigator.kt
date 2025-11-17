@@ -1,15 +1,19 @@
 package com.example.auctionauto
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.auctionauto.data.UserRepository
 import com.example.auctionauto.screens.*
 
 // manages screens!
 @Composable
 fun ScreenNavigator() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val userRepo = UserRepository(context) // one instance per composition
 
     // NavHost displays the currently selected screen (Composable function)
     NavHost(
@@ -23,8 +27,10 @@ fun ScreenNavigator() {
                     navController.navigate("REGISTER_SCREEN")
                 },
                 onLoginClick = {
+                    // on successful login, go to dashboard
                     navController.navigate("DASHBOARD_SCREEN")
-                }
+                },
+                userRepo = userRepo
             )
         }
 
@@ -32,7 +38,8 @@ fun ScreenNavigator() {
             RegisterScreen(
                 onBack = {
                     navController.popBackStack()
-                }
+                },
+                userRepo = userRepo
             )
         }
 
