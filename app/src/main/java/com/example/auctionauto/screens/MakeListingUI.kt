@@ -1,13 +1,13 @@
 package com.example.auctionauto.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -26,31 +26,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.auctionauto.ensureNumeric
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MakeListingScreen(onBack: () -> Unit) {
-    var price by remember { mutableStateOf("") } // (starting price)
-    var duration by remember { mutableStateOf("") } // duration of auction
     var make by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-
-    val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
-
     // MakeListing implementation
-    Scaffold(
+    Scaffold (
         topBar = {
             TopAppBar(
                 title = {
-                    Box {
-                        Text("Make Listing")
-                    }
+                    Box{
+                    Text("Make Listing")}
                 },
                 modifier = Modifier.height(100.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -68,47 +61,27 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 .padding(top = 50.dp),
             contentAlignment = Alignment.Center
         ) {
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
+                 Row(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = price,
-                        onValueChange = { price = ensureNumeric(context, it) },
-                        label = { Text("Starting price") },
-                    )
+                     TextField(
+                         modifier = Modifier.width(125.dp),
+                         value = make,
+                         onValueChange = { make = it },
+                         label = { Text("Make") },
+                     )
                     Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = duration,
-                        onValueChange = { duration = ensureNumeric(context, it) },
-                        label = { Text("Duration (days)") },
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = make,
-                        onValueChange = { make = it },
-                        label = { Text("Make") },
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = model,
-                        onValueChange = { model = it },
-                        label = { Text("Model") },
-                    )
+                     TextField(
+                         modifier = Modifier.width(125.dp),
+                         value = model,
+                         onValueChange = { model = it },
+                         label = { Text("Model") },
+                     )
                 }
                 Spacer(Modifier.height(10.dp))
                 Row(
@@ -125,7 +98,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                     TextField(
                         modifier = Modifier.width(125.dp),
                         value = year,
-                        onValueChange = { year = ensureNumeric(context, it) },
+                        onValueChange = { year = it },
                         label = { Text("Year") },
                     )
                 }
@@ -136,8 +109,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 )
                 {
                     TextField(
-                        modifier = Modifier
-                            .width(300.dp)
+                        modifier = Modifier.width(300.dp)
                             .height(200.dp),
                         value = description,
                         onValueChange = { description = it },
@@ -146,18 +118,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 }
             }
             Button(
-                onClick = {
-                    sendToDatabase(
-                        onBack,
-                        price,
-                        duration,
-                        year,
-                        color,
-                        make,
-                        model,
-                        description
-                    )
-                },
+                onClick = {sendToDatabase(onBack,year,color,make,model,description)},
                 modifier = Modifier
                     .width(300.dp)
                     .height(50.dp)
@@ -172,11 +133,10 @@ fun MakeListingScreen(onBack: () -> Unit) {
     }
 }
 
-fun sendToDatabase(
-    onBack: () -> Unit, price: String, duration: String, year: String, color: String,
-    make: String, model: String, description: String
-) {
+fun sendToDatabase(onBack: () -> Unit,year: String,color: String,
+                   make:String,model:String,description:String)
+    {
 
     //Do all database addition here.
     onBack()
-}
+    }
