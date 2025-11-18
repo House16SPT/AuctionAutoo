@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import com.example.auctionauto.screens.loadPaymentMethods
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -22,8 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.auctionauto.screens.PaymentMethod
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.R
 import kotlin.Unit
@@ -33,13 +41,26 @@ import kotlin.Unit
 @Composable
 fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
 
+    val context = LocalContext.current
+
+    var paymentMethods by remember {
+        mutableStateOf(loadPaymentMethods(context))
+    }
     // AccountInfo implementation
     Scaffold (
         topBar = {
             TopAppBar(
                 title = {
-                    Box{
-                        Text("Account Info")}
+                    Image(
+                        painter = painterResource(id = R.drawable.accountinfo),
+                        contentDescription = "AuctionAuto Logo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                            .height(65.dp)
+                            .width(275.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
                 },
                 modifier = Modifier.height(100.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -61,20 +82,45 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    Image(
-                        painter = painterResource(id = R.drawable.auctionauto),
-                        contentDescription = "AuctionAuto Logo",
-                        modifier = Modifier
-                            .height(65.dp)
-                            .width(275.dp),
-                        contentScale = ContentScale.FillBounds
-                    )
-                }
+                    if (paymentMethods.isEmpty()) {
+                        Text("No payment methods saved.")
+                    }
+                    else {
+                        paymentMethods.forEachIndexed { index, method ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(horizontal = 2.dp, vertical = 2.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Text("Account: ${maskLast4(method.checking)}")
+
+                                    Spacer(modifier = Modifier.width(2.dp))
+
+                                    IconButton(onClick = {
+                                        deletePaymentMethod(context, index)
+                                        paymentMethods = loadPaymentMethods(context)
+                                    }) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = "Delete",
+                                            tint = Color.Red
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+                    }
+
                 Spacer(modifier = Modifier.height(80.dp))
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -88,11 +134,13 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                                 containerColor = Color(0xFFB53A1D)
                             )
                         ) {
-                            Text("Payment Methods")
+                            Text("Add a Payment Method")
                         }
 
                 }
+
                 Spacer(modifier = Modifier.height(80.dp))
+
                 Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.Center
@@ -113,4 +161,8 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
             }
         }
     }
+}
+
+fun maskLast4(number: String): String { //AI wrote this
+    return number.takeLast(4).padStart(number.length, '*')
 }

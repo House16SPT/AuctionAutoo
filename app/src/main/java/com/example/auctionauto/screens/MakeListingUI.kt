@@ -1,5 +1,6 @@
 package com.example.auctionauto.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,8 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.auctionauto.R
 import com.example.auctionauto.ensureNumeric
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,9 +52,16 @@ fun MakeListingScreen(onBack: () -> Unit) {
         topBar = {
             TopAppBar(
                 title = {
-                    Box {
-                        Text("Make Listing")
-                    }
+                    Image(
+                        painter = painterResource(id = R.drawable.makealisting),
+                        contentDescription = "AuctionAuto Logo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                            .height(65.dp)
+                            .width(275.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
                 },
                 modifier = Modifier.height(100.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
