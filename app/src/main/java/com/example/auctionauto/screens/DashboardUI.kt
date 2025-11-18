@@ -1,13 +1,11 @@
 package com.example.auctionauto.screens
 
+import android.text.Layout
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -18,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +25,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.auctionauto.ListingVMFactory
+import com.example.auctionauto.ListingViewModel
 import com.example.auctionauto.R
+import com.example.auctionauto.data.AppDatabase
+import com.example.auctionauto.data.ListingRepo
+import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +51,21 @@ fun DashboardScreen(
 ) {
 
     var expanded by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    val database = AppDatabase.getDatabase(context)
+    val repo = ListingRepo(database.listingDao())
+
+    val viewModel: ListingViewModel = viewModel(
+        factory = ListingVMFactory(repo)
+    )
+
+    LaunchedEffect(Unit) {
+        viewModel.loadListings()
+    }
+
+    val listings by viewModel.listings.collectAsState()
 
     Scaffold(
         topBar = {
@@ -127,7 +150,56 @@ fun DashboardScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Welcome to the Dashboard!", fontSize = 24.sp)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(listings) { listing ->
+                        Box(modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .background(color = Color.LightGray),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Column() {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(15.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        "${listing.year} ${listing.make} ${listing.model}",
+                                        fontSize = 20.sp
+                                    )
+                                    Text(
+                                        "$${listing.price}",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(15.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        "${listing.color} ",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(15.dp),
+                                ) {
+                                    Text(
+                                        "${listing.description} ",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     )

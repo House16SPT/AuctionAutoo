@@ -11,3 +11,4 @@ data class User(
     val password: String,
     val type: String = "user"
 )
+

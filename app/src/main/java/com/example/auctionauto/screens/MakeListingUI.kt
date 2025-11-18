@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -31,14 +32,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.auctionauto.ListingVMFactory
+import com.example.auctionauto.ListingViewModel
 import com.example.auctionauto.R
+import com.example.auctionauto.data.AppDatabase
+import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
+import com.example.auctionauto.data.Listing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MakeListingScreen(onBack: () -> Unit) {
-    var price by remember { mutableStateOf("") } // (starting price)
-    var duration by remember { mutableStateOf("") } // duration of auction
+    var priceInput by remember { mutableStateOf("") } // (starting price)
+    var durationInput by remember { mutableStateOf("") } // duration of auction
     var make by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
@@ -46,6 +52,15 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var description by remember { mutableStateOf("") }
 
     val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
+
+    val database = AppDatabase.getDatabase(context)
+    val repo = ListingRepo(database.listingDao())
+
+    val viewModel: ListingViewModel = viewModel(
+        factory = ListingVMFactory(repo)
+    )
+
+
 
     // MakeListing implementation
     Scaffold(
@@ -90,15 +105,15 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 ) {
                     TextField(
                         modifier = Modifier.width(125.dp),
-                        value = price,
-                        onValueChange = { price = ensureNumeric(context, it) },
+                        value = priceInput,
+                        onValueChange = { priceInput = ensureNumeric(context, it) },
                         label = { Text("Starting price") },
                     )
                     Spacer(Modifier.width(10.dp))
                     TextField(
                         modifier = Modifier.width(125.dp),
-                        value = duration,
-                        onValueChange = { duration = ensureNumeric(context, it) },
+                        value = durationInput,
+                        onValueChange = { durationInput = ensureNumeric(context, it) },
                         label = { Text("Duration (days)") },
                     )
                 }
@@ -158,16 +173,18 @@ fun MakeListingScreen(onBack: () -> Unit) {
             }
             Button(
                 onClick = {
-                    sendToDatabase(
-                        onBack,
-                        price,
-                        duration,
-                        year,
-                        color,
-                        make,
-                        model,
-                        description
+                    val newListing = Listing(
+                        make = make,
+                        model = model,
+                        year = year,
+                        color = color,
+                        price = priceInput.toIntOrNull() ?: 0,
+                        description = description,
+                        author = "Uknown",
+                        duration = durationInput.toIntOrNull() ?: 0
                     )
+                    viewModel.addListing(newListing)
+                    onBack()
                 },
                 modifier = Modifier
                     .width(300.dp)
@@ -181,13 +198,4 @@ fun MakeListingScreen(onBack: () -> Unit) {
             }
         }
     }
-}
-
-fun sendToDatabase(
-    onBack: () -> Unit, price: String, duration: String, year: String, color: String,
-    make: String, model: String, description: String
-) {
-
-    //Do all database addition here.
-    onBack()
 }
