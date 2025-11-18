@@ -26,4 +26,11 @@ class ListingViewModel(private val repo: ListingRepo): ViewModel() {
         }
     }
 
+    fun increasePrice(id: Int) {
+        viewModelScope.launch {
+            repo.increasePrice(id)
+            loadListings() // refresh list after update
+        }
+    }
+
 }

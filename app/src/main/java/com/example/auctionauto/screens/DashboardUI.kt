@@ -4,7 +4,6 @@ import android.text.Layout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -27,9 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.auctionauto.ListingVMFactory
@@ -186,6 +188,20 @@ fun DashboardScreen(
                                         "${listing.color} ",
                                         fontSize = 20.sp
                                     )
+                                    Text(
+                                        modifier = Modifier.offset(x=75.dp),
+                                        text = "Bid +$100:",
+                                        fontSize = 20.sp,
+                                    )
+                                    IconButton(onClick = { viewModel.increasePrice(listing.id) },
+                                        modifier = Modifier.offset(y=-12.dp)) {
+                                        Icon(
+                                            modifier = Modifier.size(30.dp),
+                                            imageVector = Icons.Filled.ShoppingCart,
+                                            contentDescription = "Cart",
+                                            tint = Color(0xFFB53A1D)
+                                        )
+                                    }
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
@@ -193,6 +209,15 @@ fun DashboardScreen(
                                 ) {
                                     Text(
                                         "${listing.description} ",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(15.dp),
+                                ) {
+                                    Text(
+                                        "Time Left: ${listing.duration} days ",
                                         fontSize = 20.sp
                                     )
                                 }

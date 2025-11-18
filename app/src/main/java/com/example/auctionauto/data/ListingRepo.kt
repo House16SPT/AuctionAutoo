@@ -12,4 +12,7 @@ class ListingRepo(private val listingDao: ListingDao) {
 
     suspend fun deleteListing(listing: Listing) =
         listingDao.deleteListing(listing)
+
+    suspend fun increasePrice(id: Int) =
+        listingDao.increasePrice(id)
 }
