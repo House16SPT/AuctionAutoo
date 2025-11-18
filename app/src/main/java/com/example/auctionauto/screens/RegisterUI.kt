@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.R
 import com.example.auctionauto.data.UserRepository
@@ -71,12 +72,14 @@ fun RegisterScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.offset(y = 75.dp)
         )
         TextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
             label = { Text("Re-type Password") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.offset(y = 150.dp)
         )
         Button(
