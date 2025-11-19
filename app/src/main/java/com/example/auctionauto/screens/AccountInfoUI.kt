@@ -82,6 +82,15 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ){
+                val name = "[FULL NAME]"  //CHANGE LATER TO GET FROM DATABASE (IF WE ADD NAMES)
+                val email = "test@email.com"  //CHANGE LATER TO GET FROM DATABASE
+                Text(name)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(email)
+                Spacer(modifier = Modifier.height(20.dp))
+                Text("Saved payment methods: ")
+                Spacer(modifier = Modifier.height(10.dp))
+
                     if (paymentMethods.isEmpty()) {
                         Text("No payment methods saved.")
                     }
