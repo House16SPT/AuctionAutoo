@@ -1,6 +1,7 @@
 package com.example.auctionauto.screens
 
 import android.text.Layout
+import coil.compose.rememberAsyncImagePainter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -202,6 +203,16 @@ fun DashboardScreen(
                                             tint = Color(0xFFB53A1D)
                                         )
                                     }
+                                }
+                                Row() {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(listing.image),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth()

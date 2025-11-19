@@ -3,6 +3,9 @@ package com.example.auctionauto.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +42,7 @@ import com.example.auctionauto.data.AppDatabase
 import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
 import com.example.auctionauto.data.Listing
+import android.content.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +54,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var color by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
 
@@ -60,7 +65,18 @@ fun MakeListingScreen(onBack: () -> Unit) {
         factory = ListingVMFactory(repo)
     )
 
-
+    //Launcher written by ChatGPT 5.1 Instant
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            context.contentResolver.takePersistableUriPermission(
+                uri,   // ← use uri here, not it
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            imageUri = uri.toString()
+        }
+    }
 
     // MakeListing implementation
     Scaffold(
@@ -98,7 +114,14 @@ fun MakeListingScreen(onBack: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
-            ) {
+            ) { Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center) {
+                    Button(onClick = { launcher.launch("image/*") },
+                        modifier = Modifier.padding(10.dp)) {
+                        Text("Choose Picture")
+                    }
+                }
                 Row(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.Center
@@ -181,7 +204,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                         price = priceInput.toIntOrNull() ?: 0,
                         description = description,
                         author = "Uknown",
-                        duration = durationInput.toIntOrNull() ?: 0
+                        duration = durationInput.toIntOrNull() ?: 0,
+                        image = imageUri ?: ""
                     )
                     viewModel.addListing(newListing)
                     onBack()

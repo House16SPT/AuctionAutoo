@@ -14,5 +14,6 @@ data class Listing(
     val price: Int,
     val duration: Int,
     val description: String,
-    val author: String
+    val author: String,
+    val image: String
 )
