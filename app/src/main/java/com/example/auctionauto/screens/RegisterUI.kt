@@ -93,6 +93,10 @@ fun RegisterScreen(
                     Toast.makeText(context, "Invalid email", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
+                if (!isValidPassword(password)) {
+                    Toast.makeText(context, "Password must be at least 8 characters and contain a number and a letter", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
                 if (password != confirmPassword) {
                     Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                     return@Button
@@ -140,4 +144,8 @@ fun RegisterScreen(
 
 fun isValidEmail(input: String) : Boolean {
     return input.matches(Regex("[a-zA-Z0-9]+@[a-z]+\\.[a-z]{3}"))
+}
+
+fun isValidPassword(input: String) : Boolean {
+    return input.length >= 8 && input.matches(Regex(".*[0-9].*")) && input.matches(Regex(".*[a-zA-Z].*"))
 }
