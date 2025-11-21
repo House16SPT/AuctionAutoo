@@ -9,33 +9,34 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
-import com.example.auctionauto.screens.loadPaymentMethods
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.auctionauto.screens.PaymentMethod
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.R
-import kotlin.Unit
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,62 +79,62 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                 .padding(top = 50.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column(
+            LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ){
-                val name = "[FULL NAME]"  //CHANGE LATER TO GET FROM DATABASE (IF WE ADD NAMES)
-                val email = "test@email.com"  //CHANGE LATER TO GET FROM DATABASE
-                Text(name)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(email)
-                Spacer(modifier = Modifier.height(20.dp))
-                Text("Saved payment methods: ")
-                Spacer(modifier = Modifier.height(10.dp))
+                item {
+                    val name = "[FULL NAME]"  //CHANGE LATER TO GET FROM DATABASE (IF WE ADD NAMES)
+                    val email = "test@email.com"  //CHANGE LATER TO GET FROM DATABASE
+                    Text(name)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(email)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text("Saved payment methods: ")
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     if (paymentMethods.isEmpty()) {
                         Text("No payment methods saved.")
                     }
-                    else {
-                        paymentMethods.forEachIndexed { index, method ->
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(horizontal = 2.dp, vertical = 2.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                }
+                items(paymentMethods) { method ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp, vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        )
+                        {
+                            Text("Account: ${maskLast4(method.checking)}")
+
+                            Spacer(modifier = Modifier.width(2.dp))
+
+                            IconButton(onClick = {
+                                deletePaymentMethod(context, paymentMethods.indexOf(method))
+                                paymentMethods = loadPaymentMethods(context)
+                            }) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Delete",
+                                    tint = Color.Red
                                 )
-                                {
-                                    Text("Account: ${maskLast4(method.checking)}")
-
-                                    Spacer(modifier = Modifier.width(2.dp))
-
-                                    IconButton(onClick = {
-                                        deletePaymentMethod(context, index)
-                                        paymentMethods = loadPaymentMethods(context)
-                                    }) {
-                                        Icon(
-                                            Icons.Default.Close,
-                                            contentDescription = "Delete",
-                                            tint = Color.Red
-                                        )
-                                    }
-                                }
                             }
-
-                            Spacer(modifier = Modifier.height(20.dp))
                         }
                     }
 
-                Spacer(modifier = Modifier.height(80.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+                item {
+                    Spacer(modifier = Modifier.height(80.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
                         Button(
                             onClick = onPaymentInfoClick,
                             modifier = Modifier
@@ -146,14 +147,14 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                             Text("Add a Payment Method")
                         }
 
-                }
+                    }
 
-                Spacer(modifier = Modifier.height(80.dp))
+                    Spacer(modifier = Modifier.height(80.dp))
 
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                ){
+                    Row(
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
+                    ){
 
                         Button(
                             onClick = onBack,
@@ -166,6 +167,7 @@ fun AccountInfoScreen(onPaymentInfoClick: () -> Unit,onBack: () -> Unit){
                         ) {
                             Text("Back to Dashboard")
                         }
+                    }
                 }
             }
         }

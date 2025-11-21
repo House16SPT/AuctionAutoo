@@ -1,6 +1,5 @@
 package com.example.auctionauto.screens
 
-import android.text.Layout
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,19 +40,16 @@ import com.example.auctionauto.R
 import com.example.auctionauto.data.AppDatabase
 import com.example.auctionauto.data.ListingRepo
 import androidx.compose.foundation.lazy.items
-import com.example.auctionauto.UserSession
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    modifier: Modifier = Modifier,
     onMakeListingClick: () -> Unit,
     onMyListingsClick: () -> Unit,
     onMyBidsClick: () -> Unit,
-    onAccountInfoClick: () -> Unit,
-    onBack: () -> Unit
+    onAccountInfoClick: () -> Unit
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -168,7 +164,7 @@ fun DashboardScreen(
                             .background(color = Color.LightGray),
                             contentAlignment = Alignment.CenterStart
                         ) {
-                            Column() {
+                            Column {
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(15.dp),
@@ -209,7 +205,7 @@ fun DashboardScreen(
                                         )
                                     }
                                 }
-                                Row() {
+                                Row {
                                     Image(
                                         painter = rememberAsyncImagePainter(listing.image),
                                         contentDescription = null,

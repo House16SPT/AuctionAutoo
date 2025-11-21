@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.ListingVMFactory
 import com.example.auctionauto.ListingViewModel
@@ -47,6 +48,7 @@ import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
 import com.example.auctionauto.data.Listing
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.lazy.LazyColumn
 import com.example.auctionauto.UserSession
@@ -151,7 +153,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = priceInput,
                                     onValueChange = { priceInput = ensureNumeric(context, it) },
                                     label = { Text("Starting price") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                                 Spacer(Modifier.width(10.dp))
@@ -160,7 +162,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = durationInput,
                                     onValueChange = { durationInput = ensureNumeric(context, it) },
                                     label = { Text("Duration (days)") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                             }
@@ -206,7 +208,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = year,
                                     onValueChange = { year = ensureNumeric(context, it) },
                                     label = { Text("Year") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                             }
@@ -232,6 +234,11 @@ fun MakeListingScreen(onBack: () -> Unit) {
 
                             Button(
                                 onClick = {
+                                    if (make.isEmpty() || model.isEmpty() || year.isEmpty() || color.isEmpty() || priceInput.isEmpty() || description.isEmpty() || durationInput.isEmpty()) {
+                                        Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
+                                        return@Button
+                                }
+
                                     val newListing = Listing(
                                         make = make,
                                         model = model,
