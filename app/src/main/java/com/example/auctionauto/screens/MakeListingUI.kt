@@ -43,6 +43,7 @@ import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
 import com.example.auctionauto.data.Listing
 import android.content.Intent
+import androidx.compose.foundation.lazy.LazyColumn
 import com.example.auctionauto.UserSession
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,6 +105,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
             )
         }
     ) { innerPadding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,131 +114,147 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 .padding(top = 50.dp),
             contentAlignment = Alignment.TopCenter
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+            {
+                item {
+                    Box(modifier = Modifier) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Button(
+                                    onClick = { launcher.launch("image/*") },
+                                    modifier = Modifier.padding(10.dp)
+                                ) {
+                                    Text("Choose Picture")
+                                }
+                            }
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = priceInput,
+                                    onValueChange = { priceInput = ensureNumeric(context, it) },
+                                    label = { Text("Starting price") },
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = durationInput,
+                                    onValueChange = { durationInput = ensureNumeric(context, it) },
+                                    label = { Text("Duration (days)") },
+                                )
+                            }
+                            Spacer(Modifier.height(10.dp))
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = make,
+                                    onValueChange = { make = it },
+                                    label = { Text("Make") },
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = model,
+                                    onValueChange = { model = it },
+                                    label = { Text("Model") },
+                                )
+                            }
+                            Spacer(Modifier.height(10.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = color,
+                                    onValueChange = { color = it },
+                                    label = { Text("Color") },
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                TextField(
+                                    modifier = Modifier.width(125.dp),
+                                    value = year,
+                                    onValueChange = { year = ensureNumeric(context, it) },
+                                    label = { Text("Year") },
+                                )
+                            }
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) { Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center) {
-                    Button(onClick = { launcher.launch("image/*") },
-                        modifier = Modifier.padding(10.dp)) {
-                        Text("Choose Picture")
+                            Spacer(Modifier.height(20.dp))
+
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.Center
+                            )
+                            {
+                                TextField(
+                                    modifier = Modifier
+                                        .width(300.dp)
+                                        .height(200.dp),
+                                    value = description,
+                                    onValueChange = { description = it },
+                                    label = { Text("Description") },
+                                )
+                            }
+
+                            Spacer(Modifier.height(20.dp))
+
+                            Button(
+                                onClick = {
+                                    val newListing = Listing(
+                                        make = make,
+                                        model = model,
+                                        year = year,
+                                        color = color,
+                                        price = priceInput.toIntOrNull() ?: 0,
+                                        description = description,
+                                        author = email,
+                                        duration = durationInput.toIntOrNull() ?: 0,
+                                        image = imageUri ?: ""
+                                    )
+                                    viewModel.addListing(newListing)
+                                    onBack()
+                                },
+                                modifier = Modifier
+                                    .width(300.dp)
+                                    .height(50.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFB53A1D)
+                                )
+                            ) {
+                                Text("Post Listing")
+                            }
+
+                            Spacer(Modifier.height(20.dp))
+
+                            Button(
+                                onClick = {
+                                    onBack()
+                                },
+                                modifier = Modifier
+                                    .width(300.dp)
+                                    .height(50.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFB53A1D)
+                                )
+                            ) {
+                                Text("Cancel")
+                            }
+                        }
                     }
-                }
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = priceInput,
-                        onValueChange = { priceInput = ensureNumeric(context, it) },
-                        label = { Text("Starting price") },
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = durationInput,
-                        onValueChange = { durationInput = ensureNumeric(context, it) },
-                        label = { Text("Duration (days)") },
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = make,
-                        onValueChange = { make = it },
-                        label = { Text("Make") },
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = model,
-                        onValueChange = { model = it },
-                        label = { Text("Model") },
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = color,
-                        onValueChange = { color = it },
-                        label = { Text("Color") },
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = year,
-                        onValueChange = { year = ensureNumeric(context, it) },
-                        label = { Text("Year") },
-                    )
-                }
-                Spacer(Modifier.height(20.dp))
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                )
-                {
-                    TextField(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(200.dp),
-                        value = description,
-                        onValueChange = { description = it },
-                        label = { Text("Description") },
-                    )
-                }
-            }
-            Column(modifier = Modifier.align(Alignment.BottomCenter),) {
-                Button(
-                    onClick = {
-                        val newListing = Listing(
-                            make = make,
-                            model = model,
-                            year = year,
-                            color = color,
-                            price = priceInput.toIntOrNull() ?: 0,
-                            description = description,
-                            author = email,
-                            duration = durationInput.toIntOrNull() ?: 0,
-                            image = imageUri ?: ""
-                        )
-                        viewModel.addListing(newListing)
-                        onBack()
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFB53A1D)
-                    )
-                ) {
-                    Text("Post Listing")
-                }
-
-                Spacer(Modifier.height(20.dp))
-
-                Button(
-                    onClick = {
-                        onBack()
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFB53A1D)
-                    )
-                ) {
-                    Text("Cancel")
                 }
             }
         }
