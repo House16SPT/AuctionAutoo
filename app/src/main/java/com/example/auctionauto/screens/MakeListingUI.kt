@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.ListingVMFactory
 import com.example.auctionauto.ListingViewModel
@@ -43,6 +47,7 @@ import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
 import com.example.auctionauto.data.Listing
 import android.content.Intent
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.lazy.LazyColumn
 import com.example.auctionauto.UserSession
 
@@ -58,6 +63,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<String?>(null) }
     val email = UserSession.currentEmail
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
 
@@ -70,7 +76,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
 
     //Launcher written by ChatGPT 5.1 Instant
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
             context.contentResolver.takePersistableUriPermission(
@@ -130,7 +136,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Button(
-                                    onClick = { launcher.launch("image/*") },
+                                    onClick = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                                     modifier = Modifier.padding(10.dp)
                                 ) {
                                     Text("Choose Picture")
@@ -145,6 +151,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = priceInput,
                                     onValueChange = { priceInput = ensureNumeric(context, it) },
                                     label = { Text("Starting price") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
@@ -152,6 +160,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = durationInput,
                                     onValueChange = { durationInput = ensureNumeric(context, it) },
                                     label = { Text("Duration (days)") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                             }
                             Spacer(Modifier.height(10.dp))
@@ -164,6 +174,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = make,
                                     onValueChange = { make = it },
                                     label = { Text("Make") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
@@ -171,6 +183,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = model,
                                     onValueChange = { model = it },
                                     label = { Text("Model") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                             }
                             Spacer(Modifier.height(10.dp))
@@ -183,6 +197,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = color,
                                     onValueChange = { color = it },
                                     label = { Text("Color") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
@@ -190,6 +206,8 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                     value = year,
                                     onValueChange = { year = ensureNumeric(context, it) },
                                     label = { Text("Year") },
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                                 )
                             }
 
