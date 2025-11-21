@@ -41,6 +41,9 @@ import com.example.auctionauto.R
 import com.example.auctionauto.data.AppDatabase
 import com.example.auctionauto.data.ListingRepo
 import androidx.compose.foundation.lazy.items
+import com.example.auctionauto.UserSession
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -175,8 +178,10 @@ fun DashboardScreen(
                                         "${listing.year} ${listing.make} ${listing.model}",
                                         fontSize = 20.sp
                                     )
+                                    val formattedPrice = NumberFormat.getNumberInstance(Locale.US)
+                                        .format(listing.price)
                                     Text(
-                                        "$${listing.price}",
+                                        "$${formattedPrice}",
                                         fontSize = 20.sp
                                     )
                                 }

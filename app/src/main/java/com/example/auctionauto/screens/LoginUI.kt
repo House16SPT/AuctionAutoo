@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.auctionauto.R
+import com.example.auctionauto.UserSession
 import com.example.auctionauto.data.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -100,6 +101,7 @@ fun LoginScreen(
                             }
                             if (ok) {
                                 Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                                UserSession.currentEmail = email
                                 onLoginClick() // go to dashboard, handled by screen navigator
                             } else {
                                 Toast.makeText(context, "Invalid email or password", Toast.LENGTH_SHORT).show()

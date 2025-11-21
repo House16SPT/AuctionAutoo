@@ -43,6 +43,7 @@ import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
 import com.example.auctionauto.data.Listing
 import android.content.Intent
+import com.example.auctionauto.UserSession
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +56,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var year by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<String?>(null) }
+    val email = UserSession.currentEmail
 
     val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
 
@@ -108,7 +110,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                 .padding(innerPadding)
                 .padding(bottom = 50.dp)
                 .padding(top = 50.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
 
             Column(
@@ -178,7 +180,7 @@ fun MakeListingScreen(onBack: () -> Unit) {
                         label = { Text("Year") },
                     )
                 }
-                Spacer(Modifier.height(60.dp))
+                Spacer(Modifier.height(20.dp))
                 Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.Center
@@ -194,31 +196,48 @@ fun MakeListingScreen(onBack: () -> Unit) {
                     )
                 }
             }
-            Button(
-                onClick = {
-                    val newListing = Listing(
-                        make = make,
-                        model = model,
-                        year = year,
-                        color = color,
-                        price = priceInput.toIntOrNull() ?: 0,
-                        description = description,
-                        author = "Uknown",
-                        duration = durationInput.toIntOrNull() ?: 0,
-                        image = imageUri ?: ""
+            Column(modifier = Modifier.align(Alignment.BottomCenter),) {
+                Button(
+                    onClick = {
+                        val newListing = Listing(
+                            make = make,
+                            model = model,
+                            year = year,
+                            color = color,
+                            price = priceInput.toIntOrNull() ?: 0,
+                            description = description,
+                            author = email,
+                            duration = durationInput.toIntOrNull() ?: 0,
+                            image = imageUri ?: ""
+                        )
+                        viewModel.addListing(newListing)
+                        onBack()
+                    },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB53A1D)
                     )
-                    viewModel.addListing(newListing)
-                    onBack()
-                },
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(50.dp)
-                    .align(Alignment.BottomCenter),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB53A1D)
-                )
-            ) {
-                Text("Post Listing")
+                ) {
+                    Text("Post Listing")
+                }
+
+                Spacer(Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        onBack()
+                    },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB53A1D)
+                    )
+                ) {
+                    Text("Cancel")
+                }
             }
         }
     }

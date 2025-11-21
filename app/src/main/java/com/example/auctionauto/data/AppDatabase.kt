@@ -1,5 +1,6 @@
 package com.example.auctionauto.data
 
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -7,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [User::class, Listing::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
