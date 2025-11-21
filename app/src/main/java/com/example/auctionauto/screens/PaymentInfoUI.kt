@@ -2,11 +2,8 @@ package com.example.auctionauto.screens
 
 import android.content.Context
 import androidx.compose.foundation.Image
-import com.google.gson.Gson
-import java.io.File
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,14 +29,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.R
 import com.example.auctionauto.ensureNumeric
-import kotlin.Unit
+import com.google.gson.Gson
+import java.io.File
 
 data class PaymentMethod(
     val checking: String,
@@ -65,6 +70,15 @@ fun PaymentInfoScreen(onBack: () -> Unit){
     var routingError by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val checkingNumberFocusRequester = remember { FocusRequester() }
+    val accountNumberFocusRequester = remember { FocusRequester() }
+    val routingNumberFocusRequester = remember { FocusRequester() }
+    val addressFocusRequester = remember { FocusRequester() }
+    val zipFocusRequester = remember { FocusRequester() }
+    val stateFocusRequester = remember { FocusRequester() }
+    val nameFocusRequester = remember { FocusRequester() }
 
     // AccountInfo implementation
     Scaffold (
@@ -98,141 +112,171 @@ fun PaymentInfoScreen(onBack: () -> Unit){
                 .padding(top = 50.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column(
+            LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(250.dp),
-                        value = checkingNumber,
-                        onValueChange = { checkingNumber = ensureNumeric(context,
-                            it).take(17)
-                            checkingError = checkingNumber.length < 17},
-                        label = { Text("Checking Account") },
-                        isError = checkingError,
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(250.dp),
-                        value = accountNumber,
-                        onValueChange = { accountNumber = ensureNumeric(context,
-                            it).take(17)
-                            accountError = accountNumber.length < 17},
-                        label = { Text("Account Number") },
-                        isError = accountError,
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(250.dp),
-                        value = routingNumber,
-                        onValueChange = { routingNumber = ensureNumeric(context, it).take(9)
-                            routingError = routingNumber.length < 9},
-                        label = { Text("Routing Number") },
-                        isError = routingError,
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(250.dp),
-                        value = address,
-                        onValueChange = { address = it },
-                        label = { Text("Address") },
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = zip,
-                        onValueChange = { zip = it },
-                        label = { Text("zip") },
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = state,
-                        onValueChange = { state = it },
-                        label = { Text("State") },
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        modifier = Modifier.width(125.dp),
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text("Name") },
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(80.dp))
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
-                    Button(
-                        onClick = {addPaymentMethod(
-                            context = context,
-                            checking = checkingNumber,
-                            account = accountNumber,
-                            routingNumber = routingNumber,
-                            address = address,
-                            state = state,
-                            zip = zip,
-                            name = name
-                            )
-                            onBack() },
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB53A1D)
-                        )
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Add Payment Method")
+                        TextField(
+                            modifier = Modifier.width(250.dp).focusRequester(checkingNumberFocusRequester),
+                            value = checkingNumber,
+                            onValueChange = { checkingNumber = ensureNumeric(context,
+                                it).take(17)
+                                checkingError = checkingNumber.length < 17},
+                            label = { Text("Checking Account") },
+                            isError = checkingError,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { accountNumberFocusRequester.requestFocus() })
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.width(250.dp).focusRequester(accountNumberFocusRequester),
+                            value = accountNumber,
+                            onValueChange = { accountNumber = ensureNumeric(context,
+                                it).take(17)
+                                accountError = accountNumber.length < 17},
+                            label = { Text("Account Number") },
+                            isError = accountError,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { routingNumberFocusRequester.requestFocus() })
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.width(250.dp).focusRequester(routingNumberFocusRequester),
+                            value = routingNumber,
+                            onValueChange = { routingNumber = ensureNumeric(context, it).take(9)
+                                routingError = routingNumber.length < 9},
+                            label = { Text("Routing Number") },
+                            isError = routingError,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { addressFocusRequester.requestFocus() })
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.width(250.dp).focusRequester(addressFocusRequester),
+                            value = address,
+                            onValueChange = { address = it },
+                            label = { Text("Address") },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { zipFocusRequester.requestFocus() })
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.width(125.dp).focusRequester(zipFocusRequester),
+                            value = zip,
+                            onValueChange = { zip = it },
+                            label = { Text("zip") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { stateFocusRequester.requestFocus() })
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        TextField(
+                            modifier = Modifier.width(125.dp).focusRequester(stateFocusRequester),
+                            value = state,
+                            onValueChange = { state = it },
+                            label = { Text("State") },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { nameFocusRequester.requestFocus() })
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.width(125.dp).focusRequester(nameFocusRequester),
+                            value = name,
+                            onValueChange = { name = it },
+                            label = { Text("Name") },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(80.dp))
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        Button(
+                            onClick = {addPaymentMethod(
+                                context = context,
+                                checking = checkingNumber,
+                                account = accountNumber,
+                                routingNumber = routingNumber,
+                                address = address,
+                                state = state,
+                                zip = zip,
+                                name = name
+                                )
+                                onBack() },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .height(50.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFB53A1D)
+                            )
+                        ) {
+                            Text("Add Payment Method")
+                        }
                     }
                 }
-                Row(
-                    modifier = Modifier.padding(10.dp),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
-                    Button(
-                        onClick = { onBack() },
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB53A1D)
-                        )
+                item {
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Cancel")
+
+                        Button(
+                            onClick = { onBack() },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .height(50.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFB53A1D)
+                            )
+                        ) {
+                            Text("Cancel")
+                        }
                     }
                 }
             }
@@ -302,4 +346,3 @@ fun deletePaymentMethod(context: Context, index: Int) {
 
     file.writeText(gson.toJson(list))
 }
-

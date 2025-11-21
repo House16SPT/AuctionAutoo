@@ -1,11 +1,13 @@
 package com.example.auctionauto.screens
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -22,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -32,24 +34,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.auctionauto.ListingVMFactory
 import com.example.auctionauto.ListingViewModel
 import com.example.auctionauto.R
+import com.example.auctionauto.UserSession
 import com.example.auctionauto.data.AppDatabase
+import com.example.auctionauto.data.Listing
 import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
-import com.example.auctionauto.data.Listing
-import android.content.Intent
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.compose.foundation.lazy.LazyColumn
-import com.example.auctionauto.UserSession
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +65,15 @@ fun MakeListingScreen(onBack: () -> Unit) {
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<String?>(null) }
     val email = UserSession.currentEmail
-    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // these vars to change focused text field on enter
+    val priceInputFocusRequester = remember { FocusRequester() }
+    val durationInputFocusRequester = remember { FocusRequester() }
+    val makeFocusRequester = remember { FocusRequester() }
+    val modelFocusRequester = remember { FocusRequester() }
+    val colorFocusRequester = remember { FocusRequester() }
+    val yearFocusRequester = remember { FocusRequester() }
+    val descriptionFocusRequester = remember { FocusRequester() }
 
     val context = LocalContext.current // for displaying error messages (non numeric input, etc.)
 
@@ -147,21 +157,21 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(priceInputFocusRequester),
                                     value = priceInput,
                                     onValueChange = { priceInput = ensureNumeric(context, it) },
                                     label = { Text("Starting price") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { durationInputFocusRequester.requestFocus() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(durationInputFocusRequester),
                                     value = durationInput,
                                     onValueChange = { durationInput = ensureNumeric(context, it) },
                                     label = { Text("Duration (days)") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { makeFocusRequester.requestFocus() })
                                 )
                             }
                             Spacer(Modifier.height(10.dp))
@@ -170,21 +180,21 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(makeFocusRequester),
                                     value = make,
                                     onValueChange = { make = it },
                                     label = { Text("Make") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { modelFocusRequester.requestFocus() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(modelFocusRequester),
                                     value = model,
                                     onValueChange = { model = it },
                                     label = { Text("Model") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { colorFocusRequester.requestFocus() })
                                 )
                             }
                             Spacer(Modifier.height(10.dp))
@@ -193,21 +203,21 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(colorFocusRequester),
                                     value = color,
                                     onValueChange = { color = it },
                                     label = { Text("Color") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { yearFocusRequester.requestFocus() })
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 TextField(
-                                    modifier = Modifier.width(125.dp),
+                                    modifier = Modifier.width(125.dp).focusRequester(yearFocusRequester),
                                     value = year,
                                     onValueChange = { year = ensureNumeric(context, it) },
                                     label = { Text("Year") },
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(onNext = { descriptionFocusRequester.requestFocus() })
                                 )
                             }
 
@@ -221,10 +231,10 @@ fun MakeListingScreen(onBack: () -> Unit) {
                                 TextField(
                                     modifier = Modifier
                                         .width(300.dp)
-                                        .height(200.dp),
+                                        .height(200.dp).focusRequester(descriptionFocusRequester),
                                     value = description,
                                     onValueChange = { description = it },
-                                    label = { Text("Description") },
+                                    label = { Text("Description") }
                                 )
                             }
 
