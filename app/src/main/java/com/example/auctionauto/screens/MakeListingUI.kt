@@ -2,6 +2,7 @@ package com.example.auctionauto.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -242,6 +243,11 @@ fun MakeListingScreen(onBack: () -> Unit) {
 
                             Button(
                                 onClick = {
+                                    if (make.isEmpty() || model.isEmpty() || year.isEmpty() || color.isEmpty() || priceInput.isEmpty() || description.isEmpty() || durationInput.isEmpty()) {
+                                        Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
+                                        return@Button
+                                    }
+
                                     val newListing = Listing(
                                         make = make,
                                         model = model,
