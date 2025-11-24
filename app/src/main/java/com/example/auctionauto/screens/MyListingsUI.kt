@@ -36,12 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.auctionauto.ListingVMFactory
 import com.example.auctionauto.ListingViewModel
+import com.example.auctionauto.R
 import com.example.auctionauto.UserSession
 import com.example.auctionauto.UserSession.currentEmail
 import com.example.auctionauto.data.AppDatabase
@@ -75,9 +77,16 @@ fun MyListingsScreen(onBack: () -> Unit){
     Scaffold (
         topBar = {
             TopAppBar(
-                title = {
-                    Box{
-                        Text("My Listings")}
+                title = {Image(
+                    painter = painterResource(id = R.drawable.mylistingsp),
+                    contentDescription = "AuctionAuto Logo",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp)
+                        .height(65.dp)
+                        .width(275.dp),
+                    contentScale = ContentScale.FillBounds
+                )
                 },
                 modifier = Modifier.height(100.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
