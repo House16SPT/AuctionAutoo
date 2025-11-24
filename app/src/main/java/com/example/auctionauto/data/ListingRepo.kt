@@ -7,9 +7,6 @@ class ListingRepo(private val listingDao: ListingDao) {
     suspend fun getAllListings() =
         listingDao.getAllListings()
 
-    suspend fun getListing(id: Int) =
-        listingDao.getListingById(id)
-
     suspend fun deleteListing(listing: Listing) =
         listingDao.deleteListing(listing)
 

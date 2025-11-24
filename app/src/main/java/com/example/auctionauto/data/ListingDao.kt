@@ -16,6 +16,9 @@ interface ListingDao {
     @Delete
     suspend fun deleteListing(listing: Listing)
 
+    @Query("DELETE FROM listings WHERE id = :id")
+    suspend fun deleteListingById(id: Int)
+
     @Query("UPDATE listings SET price = price + 100 WHERE id = :id")
     suspend fun increasePrice(id: Int)
 

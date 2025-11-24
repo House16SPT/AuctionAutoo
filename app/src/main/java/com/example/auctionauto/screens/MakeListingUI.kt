@@ -50,6 +50,7 @@ import com.example.auctionauto.ListingViewModel
 import com.example.auctionauto.R
 import com.example.auctionauto.UserSession
 import com.example.auctionauto.data.AppDatabase
+import com.example.auctionauto.data.BidRepo
 import com.example.auctionauto.data.Listing
 import com.example.auctionauto.data.ListingRepo
 import com.example.auctionauto.ensureNumeric
@@ -80,9 +81,10 @@ fun MakeListingScreen(onBack: () -> Unit) {
 
     val database = AppDatabase.getDatabase(context)
     val repo = ListingRepo(database.listingDao())
+    val bidRepo = BidRepo(database.bidDao())
 
     val viewModel: ListingViewModel = viewModel(
-        factory = ListingVMFactory(repo)
+        factory = ListingVMFactory(repo,bidRepo)
     )
 
     //Launcher written by ChatGPT 5.1 Instant

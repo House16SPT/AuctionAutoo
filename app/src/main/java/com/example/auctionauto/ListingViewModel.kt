@@ -1,36 +1,56 @@
 package com.example.auctionauto
 
-import com.example.auctionauto.data.Listing
 import androidx.lifecycle.ViewModel
-import com.example.auctionauto.data.ListingRepo
 import androidx.lifecycle.viewModelScope
+import com.example.auctionauto.data.Listing
+import com.example.auctionauto.data.ListingRepo
+import com.example.auctionauto.data.BidRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+class ListingViewModel(
+    private val listingRepo: ListingRepo,
+    private val bidRepo: BidRepo
+) : ViewModel() {
 
-// This class was written by ChatGPT 5.1 Instant
-class ListingViewModel(private val repo: ListingRepo): ViewModel() {
     private val _listings = MutableStateFlow<List<Listing>>(emptyList())
     val listings: StateFlow<List<Listing>> = _listings
 
-    fun loadListings(){
+    // Load all listings from DB
+    fun loadListings() {
         viewModelScope.launch {
-            _listings.value = repo.getAllListings()
+            _listings.value = listingRepo.getAllListings()
         }
     }
 
+    fun deleteListing(listing: Listing) {
+        viewModelScope.launch {
+            listingRepo.deleteListing(listing)
+            loadListings() // refresh UI
+        }
+    }
+    // Add a bid for current user
+    fun addBid(listingId: Int) {
+        viewModelScope.launch {
+            val email = UserSession.currentEmail ?: return@launch
+            bidRepo.addBid(listingId, email)
+        }
+    }
+
+    // Add new listing
     fun addListing(listing: Listing) {
         viewModelScope.launch {
-            repo.insertListing(listing)
+            listingRepo.insertListing(listing)
+            loadListings()
         }
     }
 
+    // Increase price by 100 and refresh
     fun increasePrice(id: Int) {
         viewModelScope.launch {
-            repo.increasePrice(id)
-            loadListings() // refresh list after update
+            listingRepo.increasePrice(id)
+            loadListings()
         }
     }
-
 }

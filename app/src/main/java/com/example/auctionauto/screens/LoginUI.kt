@@ -90,7 +90,7 @@ fun LoginScreen(
                 Spacer(modifier= Modifier.height(16.dp))
                 TextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = { email = it.replace("\\s".toRegex(),"") },
                     label = { Text("Email") },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
@@ -98,7 +98,7 @@ fun LoginScreen(
                 Spacer(modifier= Modifier.height(16.dp))
                 TextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { password = it.replace("\\s".toRegex(),"") },
                     label = { Text("Password") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),

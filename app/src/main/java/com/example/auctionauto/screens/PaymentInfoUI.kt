@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.auctionauto.R
+import com.example.auctionauto.UserSession
 import com.example.auctionauto.ensureNumeric
 import com.google.gson.Gson
 import java.io.File
@@ -51,7 +52,8 @@ data class PaymentMethod(
     val address: String,
     val state: String,
     val zip: String,
-    val name: String
+    val name: String,
+    val email: String
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -245,7 +247,8 @@ fun PaymentInfoScreen(onBack: () -> Unit){
                                 address = address,
                                 state = state,
                                 zip = zip,
-                                name = name
+                                name = name,
+                                email = UserSession.currentEmail
                                 )
                                 onBack() },
                             modifier = Modifier
@@ -292,7 +295,8 @@ fun addPaymentMethod(
     address: String,
     state: String,
     zip: String,
-    name: String
+    name: String,
+    email: String
 ) {
     val gson = Gson()
     val file = File(context.filesDir, "payment_methods.json")
@@ -315,7 +319,8 @@ fun addPaymentMethod(
             address = address,
             state = state,
             zip = zip,
-            name = name
+            name = name,
+            email = email
         )
     )
 

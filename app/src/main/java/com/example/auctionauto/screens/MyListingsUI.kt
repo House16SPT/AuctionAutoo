@@ -47,6 +47,7 @@ import com.example.auctionauto.R
 import com.example.auctionauto.UserSession
 import com.example.auctionauto.UserSession.currentEmail
 import com.example.auctionauto.data.AppDatabase
+import com.example.auctionauto.data.BidRepo
 import com.example.auctionauto.data.ListingRepo
 import java.text.NumberFormat
 import java.util.Locale
@@ -58,9 +59,10 @@ fun MyListingsScreen(onBack: () -> Unit){
 
     val database = AppDatabase.getDatabase(context)
     val repo = ListingRepo(database.listingDao())
+    val bidRepo = BidRepo(database.bidDao())
 
     val viewModel: ListingViewModel = viewModel(
-        factory = ListingVMFactory(repo)
+        factory = ListingVMFactory(repo,bidRepo)
     )
 
     LaunchedEffect(Unit) {
@@ -79,7 +81,7 @@ fun MyListingsScreen(onBack: () -> Unit){
             TopAppBar(
                 title = {Image(
                     painter = painterResource(id = R.drawable.mylistingsp),
-                    contentDescription = "AuctionAuto Logo",
+                    contentDescription = "mylistings",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = 16.dp)

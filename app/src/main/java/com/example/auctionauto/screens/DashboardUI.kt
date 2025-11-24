@@ -40,6 +40,7 @@ import com.example.auctionauto.R
 import com.example.auctionauto.data.AppDatabase
 import com.example.auctionauto.data.ListingRepo
 import androidx.compose.foundation.lazy.items
+import com.example.auctionauto.data.BidRepo
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -49,7 +50,8 @@ fun DashboardScreen(
     onMakeListingClick: () -> Unit,
     onMyListingsClick: () -> Unit,
     onMyBidsClick: () -> Unit,
-    onAccountInfoClick: () -> Unit
+    onAccountInfoClick: () -> Unit,
+    onBack:() -> Unit
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -58,9 +60,10 @@ fun DashboardScreen(
 
     val database = AppDatabase.getDatabase(context)
     val repo = ListingRepo(database.listingDao())
+    val bidRepo = BidRepo(database.bidDao())
 
     val viewModel: ListingViewModel = viewModel(
-        factory = ListingVMFactory(repo)
+        factory = ListingVMFactory(repo,bidRepo)
     )
 
     LaunchedEffect(Unit) {
@@ -135,6 +138,13 @@ fun DashboardScreen(
                                     onAccountInfoClick()
                                 }
                             )
+                            DropdownMenuItem(
+                                    text = { Text("Log Out") },
+                            onClick = {
+                                expanded = false
+                                onBack()
+                            }
+                            )
                         }
                     }
                 },
@@ -195,7 +205,9 @@ fun DashboardScreen(
                                         text = "Bid +$100:",
                                         fontSize = 20.sp,
                                     )
-                                    IconButton(onClick = { viewModel.increasePrice(listing.id) },
+                                    IconButton(onClick = { viewModel.increasePrice(listing.id)
+                                                         viewModel.addBid(listing.id)
+                                                         },
                                         modifier = Modifier.offset(y=-12.dp)) {
                                         Icon(
                                             modifier = Modifier.size(30.dp),

@@ -56,6 +56,9 @@ fun ScreenNavigator() {
                 },
                 onAccountInfoClick = {
                     navController.navigate("ACCOUNT_INFO_SCREEN")
+                },
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
