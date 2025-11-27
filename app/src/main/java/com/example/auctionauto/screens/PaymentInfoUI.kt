@@ -1,6 +1,7 @@
 package com.example.auctionauto.screens
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -239,7 +240,12 @@ fun PaymentInfoScreen(onBack: () -> Unit){
                     ) {
 
                         Button(
-                            onClick = {addPaymentMethod(
+                            onClick = {
+                                if (checkingNumber.isEmpty() || accountNumber.isEmpty() || routingNumber.isEmpty() || address.isEmpty() || zip.isEmpty() || state.isEmpty() || name.isEmpty()) {
+                                    Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
+                                    return@Button
+                                }
+                                addPaymentMethod(
                                 context = context,
                                 checking = checkingNumber,
                                 account = accountNumber,
@@ -250,7 +256,9 @@ fun PaymentInfoScreen(onBack: () -> Unit){
                                 name = name,
                                 email = UserSession.currentEmail
                                 )
-                                onBack() },
+                                onBack()
+
+                                      },
                             modifier = Modifier
                                 .width(300.dp)
                                 .height(50.dp),
