@@ -14,7 +14,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun listingDao(): ListingDao
-    abstract fun bidDao(): BidDao   // <-- FIXED
+    abstract fun bidDao(): BidDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
