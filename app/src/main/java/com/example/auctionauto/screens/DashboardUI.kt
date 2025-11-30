@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.auctionauto.ListingVMFactory
 import com.example.auctionauto.ListingViewModel
-import com.example.auctionauto.R
 import com.example.auctionauto.data.AppDatabase
 import com.example.auctionauto.data.ListingRepo
 import androidx.compose.foundation.lazy.items
@@ -179,7 +178,7 @@ fun DashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(15.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically // Good for consistency
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         "${listing.year} ${listing.make} ${listing.model}",
