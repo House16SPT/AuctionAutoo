@@ -179,7 +179,7 @@ fun DashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(15.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically // Good for consistency
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         "${listing.year} ${listing.make} ${listing.model}",
