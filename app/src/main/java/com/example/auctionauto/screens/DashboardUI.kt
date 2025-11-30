@@ -139,7 +139,7 @@ fun DashboardScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                    text = { Text("Log Out") },
+                                    text = { Text("Log out") },
                             onClick = {
                                 expanded = false
                                 onBack()
@@ -179,6 +179,7 @@ fun DashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(15.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically // Good for consistency
                                 ) {
                                     Text(
                                         "${listing.year} ${listing.make} ${listing.model}",
@@ -195,26 +196,32 @@ fun DashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(15.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         "${listing.color} ",
                                         fontSize = 20.sp
                                     )
-                                    Text(
-                                        modifier = Modifier.offset(x=75.dp),
-                                        text = "Bid +$100:",
-                                        fontSize = 20.sp,
-                                    )
-                                    IconButton(onClick = { viewModel.increasePrice(listing.id)
-                                                         viewModel.addBid(listing.id)
-                                                         },
-                                        modifier = Modifier.offset(y=-12.dp)) {
-                                        Icon(
-                                            modifier = Modifier.size(30.dp),
-                                            imageVector = Icons.Filled.ShoppingCart,
-                                            contentDescription = "Cart",
-                                            tint = Color(0xFFB53A1D)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Bid +$100:",
+                                            fontSize = 20.sp,
+                                            modifier = Modifier.padding(end = 4.dp)
                                         )
+                                        IconButton(onClick = { viewModel.increasePrice(listing.id)
+                                            viewModel.addBid(listing.id)
+                                        },
+                                            modifier = Modifier.size(40.dp)
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.size(30.dp),
+                                                imageVector = Icons.Filled.ShoppingCart,
+                                                contentDescription = "Cart",
+                                                tint = Color(0xFFB53A1D)
+                                            )
+                                        }
                                     }
                                 }
                                 Row {

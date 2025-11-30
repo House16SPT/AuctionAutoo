@@ -294,7 +294,6 @@ fun PaymentInfoScreen(onBack: () -> Unit){
         }
     }
 }
-// AI wrote these 3 functions.
 fun addPaymentMethod(
     context: Context,
     checking: String,

@@ -87,7 +87,6 @@ fun MakeListingScreen(onBack: () -> Unit) {
         factory = ListingVMFactory(repo,bidRepo)
     )
 
-    //Launcher written by ChatGPT 5.1 Instant
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
