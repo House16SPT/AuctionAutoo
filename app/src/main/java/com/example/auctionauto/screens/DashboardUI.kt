@@ -4,6 +4,7 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -177,14 +178,21 @@ fun DashboardScreen(
                             Column {
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                        .padding(8.dp),
+                                    horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        "${listing.year} ${listing.make} ${listing.model}",
+                                        "${listing.year} ${listing.make} ${listing.model} (${listing.color})",
                                         fontSize = 20.sp
                                     )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(8.dp),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
                                     val formattedPrice = NumberFormat.getNumberInstance(Locale.US)
                                         .format(listing.price)
                                     Text(
@@ -194,14 +202,10 @@ fun DashboardScreen(
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                        .padding(8.dp),
+                                    horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(
-                                        "${listing.color} ",
-                                        fontSize = 20.sp
-                                    )
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -236,7 +240,7 @@ fun DashboardScreen(
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
+                                        .padding(8.dp),
                                 ) {
                                     Text(
                                         "${listing.description} ",
@@ -245,7 +249,7 @@ fun DashboardScreen(
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
+                                        .padding(8.dp),
                                 ) {
                                     Text(
                                         "Time Left: ${listing.duration} days ",

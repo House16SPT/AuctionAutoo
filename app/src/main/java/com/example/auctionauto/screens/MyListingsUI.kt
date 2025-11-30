@@ -79,7 +79,8 @@ fun MyListingsScreen(onBack: () -> Unit){
     Scaffold (
         topBar = {
             TopAppBar(
-                title = {Image(
+                title = {
+                    Image(
                     painter = painterResource(id = R.drawable.mylistingsp),
                     contentDescription = "mylistings",
                     modifier = Modifier
@@ -98,127 +99,100 @@ fun MyListingsScreen(onBack: () -> Unit){
             )
         }
     ) { innerPadding ->
-            Box(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .weight(1f) // take all vertical space
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(filteredListings) { listing ->
-                        Box(modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .background(color = Color.LightGray),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Column() {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    Text(
-                                        "${listing.year} ${listing.make} ${listing.model}",
-                                        fontSize = 20.sp
-                                    )
-                                    val formattedPrice = NumberFormat.getNumberInstance(Locale.US)
-                                        .format(listing.price)
-                                    Text(
-                                        "$${formattedPrice}",
-                                        fontSize = 20.sp
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    Text(
-                                        "${listing.color} ",
-                                        fontSize = 20.sp
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(x=75.dp),
-                                        text = "Bid +$100:",
-                                        fontSize = 20.sp,
-                                    )
-                                    IconButton(onClick = { viewModel.increasePrice(listing.id) },
-                                        modifier = Modifier.offset(y=-12.dp)) {
-                                        Icon(
-                                            modifier = Modifier.size(30.dp),
-                                            imageVector = Icons.Filled.ShoppingCart,
-                                            contentDescription = "Cart",
-                                            tint = Color(0xFFB53A1D)
-                                        )
-                                    }
-                                }
-                                Row() {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(listing.image),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(200.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                ) {
-                                    Text(
-                                        "${listing.description} ",
-                                        fontSize = 20.sp
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(15.dp),
-                                ) {
-                                    Text(
-                                        "Time Left: ${listing.duration} days ",
-                                        fontSize = 20.sp
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.Center
-                        ){
-
-                            Button(
-                                onClick = {onBack()},
-                                modifier = Modifier
-                                    .width(300.dp)
-                                    .height(100.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFB53A1D)
-                                )
+                items(filteredListings) { listing ->
+                    Box(modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .background(color = Color.LightGray),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Column() {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.Center,
                             ) {
-                                Text("Back to Dashboard")
+                                Text(
+                                    "${listing.year} ${listing.make} ${listing.model} (${listing.color})",
+                                    fontSize = 20.sp
+                                )
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                val formattedPrice = NumberFormat.getNumberInstance(Locale.US)
+                                    .format(listing.price)
+                                Text(
+                                    "$${formattedPrice}",
+                                    fontSize = 20.sp
+                                )
+                            }
+                            Row() {
+                                Image(
+                                    painter = rememberAsyncImagePainter(listing.image),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(8.dp),
+                            ) {
+                                Text(
+                                    "${listing.description} ",
+                                    fontSize = 20.sp
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(8.dp),
+                            ) {
+                                Text(
+                                    "Time Left: ${listing.duration} days ",
+                                    fontSize = 20.sp
+                                )
                             }
                         }
                     }
                 }
             }
-
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center
+            ){
+                Button(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(100.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB53A1D)
+                    )
+                ) {
+                    Text("Back to Dashboard")
+                }
+            }
+        }
     }
 }

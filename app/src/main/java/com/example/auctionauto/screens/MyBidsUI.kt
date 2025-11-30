@@ -79,19 +79,21 @@ fun MyBidsScreen(onBack: () -> Unit) {
             )
         }
     ) { innerPadding ->
-
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(bottom = 50.dp)
-                .padding(top = 20.dp),
-            contentAlignment = Alignment.TopCenter
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-
+            // LazyColumn for listings
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(bottom = 0.dp)
+                    .padding(top = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(filteredListings) { listing ->
                     Box(
@@ -107,29 +109,26 @@ fun MyBidsScreen(onBack: () -> Unit) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(15.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    "${listing.year} ${listing.make} ${listing.model}",
-                                    fontSize = 20.sp
-                                )
-                                val formattedPrice =
-                                    NumberFormat.getNumberInstance(Locale.US).format(listing.price)
-                                Text(
-                                    "$$formattedPrice",
+                                    "${listing.year} ${listing.make} ${listing.model} (${listing.color})",
                                     fontSize = 20.sp
                                 )
                             }
 
-                            // color row
+                            // price row
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(15.dp),
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.Center,
                             ) {
+                                val formattedPrice =
+                                    NumberFormat.getNumberInstance(Locale.US).format(listing.price)
                                 Text(
-                                    "${listing.color}",
+                                    "$$formattedPrice",
                                     fontSize = 20.sp
                                 )
                             }
@@ -148,7 +147,7 @@ fun MyBidsScreen(onBack: () -> Unit) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(15.dp)
+                                    .padding(8.dp)
                             ) {
                                 Text(
                                     listing.description,
@@ -160,7 +159,7 @@ fun MyBidsScreen(onBack: () -> Unit) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(15.dp)
+                                    .padding(8.dp)
                             ) {
                                 Text(
                                     "Time Left: ${listing.duration} days",
@@ -199,16 +198,15 @@ fun MyBidsScreen(onBack: () -> Unit) {
                             }
                         }
                     }
-
                 }
             }
 
-            // BACK BUTTON
-            Box(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center
+            ){
                 Button(
                     onClick = onBack,
                     modifier = Modifier
